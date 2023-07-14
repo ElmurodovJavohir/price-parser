@@ -1,0 +1,122 @@
+image:
+  name: docker/compose:1.24.0
+  entrypoint: [""]
+
+services:
+  - docker:18.09.7-dind
+
+stages:
+  - build
+  - test
+  - deploy_to_previous_server
+  - dev
+  - qa
+  - edu
+  - prod
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY: index.docker.io/v1/
+  CONTAINER_DEV_IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:dev
+  CONTAINER_PROD_IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:prod
+  CONTAINER_TEST_IMAGE: $CUSTOM_CONTAINER_REGISTRY/$CUSTOM_REGISTRY_USER/$CUSTOM_PROJECT_NAME:$CI_COMMIT_SHA
+  CONTAINER_PGSYN_TEST_IMAGE: $CUSTOM_CONTAINER_REGISTRY/$CUSTOM_REGISTRY_USER/pgsync:$CI_COMMIT_SHA
+#  CONTAINER_TEST_IMAGE: $CUSTOM_CONTAINER_REGISTRY/$CUSTOM_REGISTRY_USER/$CUSTOM_PROJECT_NAME:latest
+
+
+deploy_to_previous_server:
+  stage: deploy_to_previous_server
+  script:
+    - export $(cat .env | xargs)
+    - docker-compose -f production.yml up --build -d
+
+  only:
+    - prod
+  tags:
+    - prod
+build:
+  stage: build
+  script:
+    - export $(cat .env | xargs)
+    - echo $CUSTOM_REGISTRY_USER
+    - echo $CUSTOM_REGISTRY_PASSWORD
+    - echo $CUSTOM_REGISTRY_PASSWORD
+    - docker login -u $CUSTOM_REGISTRY_USER -p $CUSTOM_REGISTRY_PASSWORD $CUSTOM_CONTAINER_REGISTRY
+    - echo $CONTAINER_TEST_IMAGE
+    - docker build -f compose/production/django/Dockerfile --tag=$CONTAINER_TEST_IMAGE .
+    - docker build -f compose/production/pgsync/Dockerfile --tag=$CONTAINER_PGSYN_TEST_IMAGE .
+    - docker push $CONTAINER_PGSYN_TEST_IMAGE
+    - docker push $CONTAINER_TEST_IMAGE
+    ##This should be added when memory is being lackage
+#    - docker system prune -a -f
+    - echo "done!"
+  only:
+    - dev
+    - qa
+    - edu
+    - production
+  tags:
+    - build
+
+dev:
+  stage: dev
+  script:
+    # Install kubectl
+    - apk add --no-cache curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/bin/kubectl
+    - echo "hi"
+    - kubectl set image deploy/searchtm searchtm=$CONTAINER_TEST_IMAGE -n dev
+    - kubectl set image deploy/searchpgsync searchtmpgsync=$CONTAINER_PGSYN_TEST_IMAGE -n dev
+  only:
+    - dev
+  tags:
+    - dev
+
+qa:
+  stage: qa
+  script:
+    # Install kubectl
+    - apk add --no-cache curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/bin/kubectl
+    - kubectl set image deploy/searchtm searchtm=$CONTAINER_TEST_IMAGE -n qa
+    - kubectl set image deploy/searchpgsync searchtmpgsync=$CONTAINER_PGSYN_TEST_IMAGE -n qa
+
+  only:
+    - qa
+  tags:
+    - qa
+
+edu:
+  stage: edu
+  script:
+    # Install kubectl
+    - apk add --no-cache curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/bin/kubectl
+    - echo "hi"
+    - kubectl set image deploy/searchtm searchtm=$CONTAINER_TEST_IMAGE -n edu
+    - kubectl set image deploy/searchpgsync searchtmpgsync=$CONTAINER_PGSYN_TEST_IMAGE -n edu
+  only:
+    - edu
+  tags:
+    - edu
+
+production:
+  stage: prod
+  script:
+    # Install kubectl
+    - apk add --no-cache curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/bin/kubectl
+    - kubectl set image deploy/searchtm searchtm=$CONTAINER_TEST_IMAGE -n prod
+    - kubectl set image deploy/searchpgsync searchtmpgsync=$CONTAINER_PGSYN_TEST_IMAGE -n prod
+  only:
+    - production
+  tags:
+    - production

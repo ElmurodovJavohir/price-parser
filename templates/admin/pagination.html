@@ -1,0 +1,51 @@
+{% load admin_list %}
+{% load i18n %}
+<p class="paginator">
+{% if pagination_required %}
+{% for i in page_range %}
+    {% paginator_number cl i %}
+{% endfor %}
+{% endif %}
+{{ cl.result_count }} 
+{% if cl.result_count == 1 %}
+{{ cl.opts.verbose_name }}
+{% else %}
+{{ cl.opts.verbose_name_plural }}
+{% endif %}
+{% if show_all_url %}
+<a href="{{ show_all_url }}" class="showall">{% translate 'Show all' %}</a>
+{% endif %}
+{% with '5 10 25 50 100 250 500 1000' as list %} 
+  <select onchange="buttonChanged(this.value)" style="width: 100px;">
+  {% if cl.list_per_page|slugify not in list.split %}
+    <option selected>{{ cl.list_per_page }}</option>
+  {% endif %}
+  {% for i in list.split %}
+    <option value="{{ i }}" 
+    {% if cl.list_per_page|slugify == i %}
+    selected
+    {% else %}
+
+    {% endif %}
+    >{{ i }}</option>
+  {% endfor %}
+  </select>
+{% endwith %}
+<script type="text/javascript">
+
+  function buttonChanged(value) {
+    console.log(value)
+    console.log(window.location.href);
+    const url = new URL(window.location.href);    
+    var p = new URLSearchParams(url);p.set('list_per_page', value);
+    window.location.search = p.toString();
+  }
+  
+
+  
+  </script>
+{% if cl.formset and cl.result_count %}
+<input type="submit" name="_save" class="default" value="{% translate 'Save' %}">
+
+{% endif %}
+</p>

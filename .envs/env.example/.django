@@ -1,0 +1,8 @@
+DEBUG=1 
+ALLOWED_HOSTS=* 
+HOST=http://localhost:8000 
+SECRET_KEY=django-insecure-qitr6tnh2z3euo03*l7hd6$1awr01p=h9xr$i$-ktmo3r)qo-u
+
+REDIS_URL=redis://redis:6379 
+CELERY_BROKER=redis://redis:6379 
+

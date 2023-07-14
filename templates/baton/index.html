@@ -1,0 +1,73 @@
+{% extends 'admin/index.html' %}
+{% load baton_tags %}
+
+{% block content %}
+  <div id="content-main">
+    {% load i18n %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="container-fluid container-analytics">
+      {% block baton_before_analytics %}
+
+      {% endblock %}
+      <!-- this is just to make the view selector work, no need to display it -->
+      <div id="view-selector-container" style="display: none"></div>
+
+      <div class="row my-4">
+        <div class="col-lg-6">
+          <section class="panel">
+            <h1>{% trans 'Конкуренты' %}</h1>
+            <div>
+              <canvas id="competitors"></canvas>
+            </div>
+          </section>
+        </div>
+        {% comment %} <div class="col-lg-6">
+          <section class="panel">
+            <h1>{% trans 'Конкуренты' %}</h1>
+            <div>
+              <canvas id="competitors"></canvas>
+            </div>
+          </section>
+        </div> {% endcomment %}
+      </div>
+
+      {% block baton_after_analytics %}
+
+      {% endblock %}
+
+      <script>
+        const ctx_month = document.getElementById('competitors')
+
+        new Chart(ctx_month, {
+          type: 'bar',
+          data: {
+            labels: unescape("{{competitors_label}}").split(','),
+            datasets: [
+              {
+                label: 'Количество товаров',
+                data: {{competitors_data}},
+                borderWidth: 1,
+                fill:true
+              }
+            ]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top'
+              },
+              title: {
+                display: true,
+                text: "{% translate "Количество продуктов конкурентов" %}"
+              }
+            }
+          }
+        })
+
+ 
+      </script>
+    </div>
+  </div>
+{% endblock %}
