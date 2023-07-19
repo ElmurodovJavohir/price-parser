@@ -1,0 +1,16 @@
+[
+    {
+        "id":3706852,
+        "price":"13200",
+        "brand":"Chevrolet",
+        "model":"Gentra",
+        "position":"1 позиция",
+        "city":"Ташкент",
+        "year":2019,
+        "engine_capacity":"1.8",
+        "engine_fuel":"Бензин",
+        "body_type":"Седан",
+        "transmission":"Механика",
+        "drive_unit":"Передний"
+    }
+]
