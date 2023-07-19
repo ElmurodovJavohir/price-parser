@@ -51,12 +51,9 @@ INSTALLED_APPS = [
     "django_elasticsearch_dsl_drf",
     "django_better_admin_arrayfield",
     "django_celery_beat",
-    "pgtrigger",
     "import_export",
     # apps
-    "competitor",
     "product",
-    "common",
     "baton.autodiscover",
 ]
 
