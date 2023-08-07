@@ -297,13 +297,11 @@ LOGGING = {
 
 
 BATON = {
-    "SITE_HEADER": '<img src="%scustom-admin/logo.png" />' % STATIC_URL,
-    "SITE_TITLE": "Texnomart ",
-    "INDEX_TITLE": "Texnomart",
+    "SITE_TITLE": "Pricing ",
+    "INDEX_TITLE": "Pricing",
     "SUPPORT_HREF": "https://t.me/elmurodovjavohir",
     # "COPYRIGHT": 'Copyright © 2023 <a href="https://texnomart.uz">Texnomart.uz</a>',  # noqa
     "COPYRIGHT": "",  # noqa
-    "POWERED_BY": '<a  target="_blank" href="https://texnomart.uz">Texnomart.uz</a>',
     "CONFIRM_UNSAVED_CHANGES": True,
     "SHOW_MULTIPART_UPLOADING": True,
     "ENABLE_IMAGES_PREVIEW": True,
@@ -314,35 +312,12 @@ BATON = {
     # 'MENU_TITLE': 'Menu',
     "MESSAGES_TOASTS": False,
     # 'GRAVATAR_DEFAULT_IMG': 'retro',
-    "LOGIN_SPLASH": "/static/admin/logo.png",
     # 'SEARCH_FIELD': {
     #     'label': 'Search contents...',
     #     'url': '/search/',
     # },
-    "MENU": (
-        {
-            "type": "app",
-            "name": "product",
-            "label": "Продукты",
-            "icon": "fa fa-shopping-bag",
-        },
-        {
-            "type": "app",
-            "name": "competitor",
-            "label": "Конкуренты",
-            "icon": "fa fa-people-arrows-left-right",
-        },
-        {
-            "type": "app",
-            "name": "auth",
-            "label": "Пользователи",
-            "icon": "fa fa-users",
-        },
-        {
-            "type": "app",
-            "name": "django_celery_beat",
-            "label": "Периодические задачи",
-            "icon": "fa fa-clock",
-        },
-    ),
+
 }
+
+
+AVTOELON_DETAIL_URL = "https://avtoelon.uz/a/show/"

@@ -44,8 +44,8 @@ def parse_avtoelon_detail(html) -> dict:
         if value == "Год":
             avto["year"] = int(params_values[index])
         elif value == "Объем двигателя, л":
-            avto["engine_capacity"] = params_values[index].split("(")[
-                0].strip()
+            avto["engine_capacity"] = (params_values[index].split("(")[
+                0].strip())
             avto["engine_fuel"] = clean_str(params_values[index].split("(")[1])
         elif value == "Кузов":
             avto["body_type"] = params_values[index]
