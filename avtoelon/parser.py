@@ -25,10 +25,12 @@ def parse_avtoelon_detail(html) -> dict:
         avto["position"] = clean_str(title.text.split(",")[1])
     avto["model"] = clean_str(title.find("span", {"itemprop": "name"}).text)
 
-    avto["price"] = clean_number(item.find("span", {"class": "a-price__text"}).text)
+    avto["price"] = clean_number(
+        item.find("span", {"class": "a-price__text"}).text)
 
     # DETAILS
-    description_params = item.find("dl", {"class": "clearfix dl-horizontal description-params"})
+    description_params = item.find(
+        "dl", {"class": "clearfix dl-horizontal description-params"})
     params_titles = []
     for dt in description_params.find_all("dt"):
         params_titles.append(dt.text.strip())
@@ -42,7 +44,8 @@ def parse_avtoelon_detail(html) -> dict:
         if value == "Год":
             avto["year"] = int(params_values[index])
         elif value == "Объем двигателя, л":
-            avto["engine_capacity"] = params_values[index].split("(")[0].strip()
+            avto["engine_capacity"] = params_values[index].split("(")[
+                0].strip()
             avto["engine_fuel"] = clean_str(params_values[index].split("(")[1])
         elif value == "Кузов":
             avto["body_type"] = params_values[index]

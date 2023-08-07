@@ -47,13 +47,13 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework_simplejwt",
     "drf_spectacular",
-    "django_elasticsearch_dsl",
-    "django_elasticsearch_dsl_drf",
+    # "django_elasticsearch_dsl",
+    # "django_elasticsearch_dsl_drf",
     "django_better_admin_arrayfield",
     "django_celery_beat",
     "import_export",
     # apps
-    "product",
+    "avtoelon",
     "baton.autodiscover",
 ]
 
@@ -97,15 +97,21 @@ ASGI_APPLICATION = "config.asgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "crawler"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "admin"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-        "ATOMIC_REQUESTS": True,
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     },
+
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": os.getenv("POSTGRES_DB", "crawler"),
+    #     "USER": os.getenv("POSTGRES_USER", "postgres"),
+    #     "PASSWORD": os.getenv("POSTGRES_PASSWORD", "admin"),
+    #     "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+    #     "PORT": os.getenv("POSTGRES_PORT", "5432"),
+    #     "ATOMIC_REQUESTS": True,
+    # },
     # "postgresql": {
     #     "ENGINE": "django.db.backends.postgresql",
     #     "NAME": os.getenv("POSTGRES_DB", "catalog_tm"),
@@ -191,15 +197,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 
 
-# openapi settings
-SPECTACULAR_SETTINGS = {
-    "TITLE": "Texnomart swagger ui",
-    "DESCRIPTION": "",
-    "VERSION": "3.9.9",
-    "SERVE_INCLUDE_SCHEMA": True,
-    "CONTACT": {"name": "Mukhtor", "email": "", "url": ""},
-}
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
@@ -237,7 +234,8 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 if not DEBUG:
-    REST_FRAMEWORK["EXCEPTION_HANDLER"] = ("common.exception.api_exception_handler",)
+    REST_FRAMEWORK["EXCEPTION_HANDLER"] = (
+        "common.exception.api_exception_handler",)
 
 
 # Celery
@@ -258,7 +256,6 @@ CORS_ALLOW_CREDENTIALS = True
 #     'http://localhost:8000',
 # ]
 HOST = os.getenv("HOST", "http://localhost:8000")
-IMAGE_HOST = os.getenv("IMAGE_HOST", "https://file.tmart.uz")
 
 
 LOGGING = {
@@ -290,11 +287,13 @@ LOGGING = {
 
 # NEW
 
-ELASTICSEARCH_DSL = {
-    "default": {"hosts": os.getenv("ELASTIC_HOST", "localhost")},
-}
-ELASTICSEARCH_DSL_AUTOSYNC = False  # Set to False to globally disable auto-syncing.
-ELASTICSEARCH_DSL_AUTO_REFRESH = False  # Set to False not force an [index refresh] with every save.
+# ELASTICSEARCH_DSL = {
+#     "default": {"hosts": os.getenv("ELASTIC_HOST", "localhost")},
+# }
+# # Set to False to globally disable auto-syncing.
+# ELASTICSEARCH_DSL_AUTOSYNC = False
+# # Set to False not force an [index refresh] with every save.
+# ELASTICSEARCH_DSL_AUTO_REFRESH = False
 
 
 BATON = {
@@ -347,26 +346,3 @@ BATON = {
         },
     ),
 }
-
-
-if not DEBUG:
-    # SENTRY
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(
-        dsn="https://c0d2d48c586245cc94eeee8db3bd2c11@o4504376800051200.ingest.sentry.io/4504576313262080",
-        integrations=[DjangoIntegration()],
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for performance monitoring.
-        # We recommend adjusting this value in production,
-        traces_sample_rate=1.0,
-        # If you wish to associate users to errors (assuming you are using
-        # django.contrib.auth) you may enable sending PII data.
-        send_default_pii=True,
-        # By default the SDK will try to use the SENTRY_RELEASE
-        # environment variable, or infer a git commit
-        # SHA as release, however you may want to set
-        # something more human-readable.
-        # release="myapp@1.0.0",
-    )

@@ -24,7 +24,7 @@ adverts = json.load(json_file)
 json_file.close()
 
 avtos = []
-for i in range(1, 597):
+for i in range(1, 2):
     res = requests.get(f"https://avtoelon.uz/avto/chevrolet/cobalt/?page={i}")
     soup = BeautifulSoup(res.text, "html.parser")
 
