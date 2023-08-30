@@ -4,4 +4,4 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-uvicorn config.asgi:application --host 0.0.0.0 --reload --reload-include '*.html'
+/usr/local/bin/gunicorn config.asgi --bind 0.0.0.0:8080 --chdir=/app -k uvicorn.workers.UvicornWorker

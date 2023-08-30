@@ -30,6 +30,6 @@ set -o nounset
 #   sleep 1
 # done
 # >&2 echo 'PostgreSQL is available'
-/usr/local/bin/gunicorn config.asgi --bind 0.0.0.0:8000 --chdir=/app -k uvicorn.workers.UvicornWorker
+/usr/local/bin/gunicorn config.asgi --bind 0.0.0.0:8080 --chdir=/app -k uvicorn.workers.UvicornWorker
 #exec "$@"
 

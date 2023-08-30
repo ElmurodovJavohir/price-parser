@@ -73,5 +73,5 @@ RUN chmod +x /start
 # copy application code to WORKDIR
 COPY --chown=django:django . ${APP_HOME}
 # make django owner of the WORKDIR directory as well.
-EXPOSE 8000
+EXPOSE 8080
 ENTRYPOINT ["/entrypoint"]
