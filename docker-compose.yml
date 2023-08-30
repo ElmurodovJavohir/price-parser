@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   django: &django
@@ -14,7 +14,7 @@ services:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - "8000:8000"
+      - "8080:8080"
     command: /start
   postgres:
     image: postgres:14.5-alpine
@@ -29,13 +29,13 @@ services:
   celeryworker:
     <<: *django
     image: celeryworker
-    ports: [ ]
+    ports: []
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
     image: celerybeat
-    ports: [ ]
+    ports: []
     command: /start-celerybeat
   selenium-hub:
     image: selenium/hub:3.141.59-20200409
@@ -91,4 +91,4 @@ services:
 networks:
   collabnet:
 volumes:
-  postgres_data: { }
+  postgres_data: {}
