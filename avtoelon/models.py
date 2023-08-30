@@ -1,6 +1,15 @@
 from django.db import models
 from utils.models import BaseModel
+
 # Create your models here.
+
+
+class AutoLink(BaseModel):
+    link = models.CharField(max_length=512, unique=True)
+    is_parsed = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return self.link
 
 
 class AutoBrand(BaseModel):
@@ -34,15 +43,15 @@ class AutoCity(BaseModel):
 
 
 class Auto(BaseModel):
+    link = models.ForeignKey(AutoLink, related_name="auto", on_delete=models.CASCADE)
+
     autoelon_id = models.IntegerField(unique=True)
-    brand = models.ForeignKey(
-        AutoBrand, related_name="auto", on_delete=models.CASCADE)
-    model = models.ForeignKey(
-        AutoModel, related_name="auto", on_delete=models.CASCADE)
+    brand = models.ForeignKey(AutoBrand, related_name="auto", on_delete=models.CASCADE)
+    model = models.ForeignKey(AutoModel, related_name="auto", on_delete=models.CASCADE)
     position = models.ForeignKey(
-        AutoPosition, related_name="auto", on_delete=models.CASCADE, null=True, blank=True)
-    city = models.ForeignKey(
-        AutoCity, related_name="auto", on_delete=models.CASCADE)
+        AutoPosition, related_name="auto", on_delete=models.CASCADE, null=True, blank=True
+    )
+    city = models.ForeignKey(AutoCity, related_name="auto", on_delete=models.CASCADE)
 
     price = models.IntegerField()
     year = models.SmallIntegerField()
@@ -59,13 +68,13 @@ class Auto(BaseModel):
         # BRAND
         brand, _ = AutoBrand.objects.get_or_create(title=auto_dict["brand"])
         # MODEL
-        model, _ = AutoModel.objects.get_or_create(
-            title=auto_dict["model"], brand=brand)
+        model, _ = AutoModel.objects.get_or_create(title=auto_dict["model"], brand=brand)
         # POSITION
         position = None
         if auto_dict["position"]:
             position, _ = AutoPosition.objects.get_or_create(
-                title=auto_dict["position"], model=model)
+                title=auto_dict["position"], model=model
+            )
         # CITY
         city, _ = AutoCity.objects.get_or_create(title=auto_dict["city"])
 
@@ -85,7 +94,7 @@ class Auto(BaseModel):
                 "transmission": auto_dict["transmission"],
                 "drive_unit": auto_dict["drive_unit"],
                 "description": auto_dict["description"],
-            }
+            },
         )
 
     def __str__(self) -> str:
