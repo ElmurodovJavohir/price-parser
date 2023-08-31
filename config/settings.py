@@ -149,7 +149,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = "ru-ru"
-CSRF_TRUSTED_ORIGINS = ["https://pricing.smartbots.uz"]
+CSRF_TRUSTED_ORIGINS = ["https://pricing.smartbots.uz", "http://localhost:8080"]
 
 
 def gettext(s):
