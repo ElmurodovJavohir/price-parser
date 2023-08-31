@@ -30,7 +30,8 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", 1)
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = ["*"]
+# os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # Application definition
 INSTALLED_APPS = [
@@ -97,12 +98,10 @@ ASGI_APPLICATION = "config.asgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     },
-
     # "default": {
     #     "ENGINE": "django.db.backends.postgresql",
     #     "NAME": os.getenv("POSTGRES_DB", "crawler"),
@@ -234,8 +233,7 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 if not DEBUG:
-    REST_FRAMEWORK["EXCEPTION_HANDLER"] = (
-        "common.exception.api_exception_handler",)
+    REST_FRAMEWORK["EXCEPTION_HANDLER"] = ("common.exception.api_exception_handler",)
 
 
 # Celery
@@ -316,7 +314,6 @@ BATON = {
     #     'label': 'Search contents...',
     #     'url': '/search/',
     # },
-
 }
 
 
