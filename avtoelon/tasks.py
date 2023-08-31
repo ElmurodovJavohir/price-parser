@@ -5,8 +5,10 @@ from bs4 import BeautifulSoup
 from avtoelon.parser import parse_avtoelon_detail
 from django.conf import settings
 from avtoelon.models import Auto, AutoLink
+from celery import shared_task
 
 
+@shared_task
 def parse_links():
     for i in range(1, 1001):
         res = requests.get(f"https://avtoelon.uz/avto/chevrolet/?page={i}")
@@ -21,6 +23,7 @@ def parse_links():
         print(f"Page {i} done")
 
 
+@shared_task
 def parse_start():
     links = (
         AutoLink.objects.filter(is_parsed=False).values_list("link", flat=True).order_by("?")[:100]
