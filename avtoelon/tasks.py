@@ -26,7 +26,7 @@ def parse_links():
 @shared_task
 def parse_start():
     links = (
-        AutoLink.objects.filter(is_parsed=False).values_list("link", flat=True).order_by("?")[:100]
+        AutoLink.objects.filter(is_parsed=False).order_by("?")[:100]
     )
     for link in links:
         res = requests.get(link.link)
