@@ -64,7 +64,7 @@ class Auto(BaseModel):
     description = models.TextField(null=True, blank=True)
 
     @classmethod
-    def create_or_update_auto(cls, auto_dict: dict):
+    def create_or_update_auto(cls, auto_dict: dict, link):
         # BRAND
         brand, _ = AutoBrand.objects.get_or_create(title=auto_dict["brand"])
         # MODEL
@@ -81,6 +81,7 @@ class Auto(BaseModel):
         # AUTO
         cls.objects.update_or_create(
             autoelon_id=auto_dict["autoelon_id"],
+            link = link,
             defaults={
                 "brand": brand,
                 "model": model,

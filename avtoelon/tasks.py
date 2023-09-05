@@ -25,9 +25,7 @@ def parse_links():
 
 @shared_task
 def parse_start():
-    links = (
-        AutoLink.objects.filter(is_parsed=False).order_by("?")[:100]
-    )
+    links = AutoLink.objects.filter(is_parsed=False).order_by("?")[:100]
     for link in links:
         res = requests.get(link.link)
         if res.status_code != 200:
@@ -38,6 +36,6 @@ def parse_start():
         # CHECK URL PAGINATION
         parse_object = parse_avtoelon_detail(res.text)
         parse_object["autoelon_id"] = link.link.replace(settings.AVTOELON_DETAIL_URL, "")
-        Auto.create_or_update_auto(parse_object)
+        Auto.create_or_update_auto(parse_object, link)
         link.is_parsed = True
         link.save()
