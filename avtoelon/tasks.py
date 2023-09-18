@@ -39,3 +39,47 @@ def parse_start():
         Auto.create_or_update_auto(parse_object, link)
         link.is_parsed = True
         link.save()
+
+
+@shared_task()
+def parse_links_with_selenium():
+    # BS4 IMPORTS
+    import time
+    from selenium.common.exceptions import WebDriverException
+    from bs4 import BeautifulSoup
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.service import Service
+    from webdriver_manager.chrome import ChromeDriverManager
+
+    for i in range(1, 1001):
+        options = Options()
+        options.add_argument("--headless")
+
+        options.add_argument("--no-sandbox")
+
+        options.add_argument("--disable-dev-shm-usage")
+
+        chrome_prefs = {}
+
+        options.experimental_options["prefs"] = chrome_prefs
+        chrome_prefs["profile.default_content_settings"] = {"images": 2}
+
+        # MAKE DICT COMPETITOR SETTINGS
+
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+        driver.get(f"https://avtoelon.uz/avto/chevrolet/?page={i}")
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        links = set()
+        for ad in soup.find_all("div", {"class": "row list-item a-elem"}):
+            links.add(f"{settings.AVTOELON_DETAIL_URL}{ad['data-id']}")
+        # BULK CREATE or UPDATE AUTOLINK OBJECTS
+        used_links = set(AutoLink.objects.filter(link__in=links).values_list("link", flat=True))
+        new_links = links - used_links
+        AutoLink.objects.bulk_create([AutoLink(link=link) for link in new_links])
+        # Delay to load the contents of the HTML FIle
+        time.sleep(2)
+        # Parse processed webpage with BeautifulSoup
+
+        print(f"Page {i} done")
