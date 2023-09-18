@@ -38,7 +38,7 @@ services:
     ports: []
     command: /start-celerybeat
   selenium-hub:
-    image: selenium/hub:3.141.59-20200409
+    image: selenium/hub
     container_name: selenium-hub
     platform: linux/amd64
     ports:
@@ -46,7 +46,7 @@ services:
     networks:
       - collabnet
   chrome:
-    image: selenium/node-chrome:3.141.59-20200409
+    image: selenium/node-chrome
     volumes:
       - /dev/shm:/dev/shm
     depends_on:
@@ -60,7 +60,7 @@ services:
       - collabnet
 
   chrome-debug:
-    image: selenium/node-chrome-debug:3.141.59-20200409
+    image: selenium/node-chrome-debug
     volumes:
       - /dev/shm:/dev/shm
     depends_on:
