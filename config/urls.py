@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from baton.autodiscover import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -25,6 +26,11 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from avtoelon.views import AutoDocumentView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+books = router.register(r"auto", AutoDocumentView, basename="auto")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,6 +39,7 @@ urlpatterns = [
     path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/v1/", include(router.urls)),
     path("", RedirectView.as_view(url="admin", permanent=False), name="index"),
 ]
 # if settings.DEBUG:

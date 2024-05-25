@@ -74,20 +74,20 @@ services:
       - "5900:5900"
     networks:
       - collabnet
-  # elasticsearch:
-  #   image: 'docker.elastic.co/elasticsearch/elasticsearch:8.5.3'
-  #   container_name: elasticsearch
-  #   environment:
-  #     - xpack.security.enabled=false
-  #     - discovery.type=single-node
-  #     - bootstrap.memory_lock=true
-  #     - ES_JAVA_OPTS=-Xmx4g -Xms4g
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #   ports:
-  #     - '9200:9200'
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:8.5.3'
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xmx4g -Xms4g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - '9200:9200'
 networks:
   collabnet:
 volumes:

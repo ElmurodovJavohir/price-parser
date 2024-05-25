@@ -45,7 +45,7 @@ class AutoCity(BaseModel):
 class Auto(BaseModel):
     link = models.ForeignKey(AutoLink, related_name="auto", on_delete=models.CASCADE)
 
-    autoelon_id = models.IntegerField(unique=True)
+    # autoelon_id = models.IntegerField(unique=True)
     brand = models.ForeignKey(AutoBrand, related_name="auto", on_delete=models.CASCADE)
     model = models.ForeignKey(AutoModel, related_name="auto", on_delete=models.CASCADE)
     position = models.ForeignKey(
@@ -81,7 +81,7 @@ class Auto(BaseModel):
         # AUTO
         cls.objects.update_or_create(
             autoelon_id=auto_dict["autoelon_id"],
-            link = link,
+            link=link,
             defaults={
                 "brand": brand,
                 "model": model,
@@ -97,6 +97,4 @@ class Auto(BaseModel):
                 "description": auto_dict["description"],
             },
         )
-
-    def __str__(self) -> str:
-        return self.autoelon_id
+    

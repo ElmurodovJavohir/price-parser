@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -48,8 +49,8 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework_simplejwt",
     "drf_spectacular",
-    # "django_elasticsearch_dsl",
-    # "django_elasticsearch_dsl_drf",
+    "django_elasticsearch_dsl",
+    "django_elasticsearch_dsl_drf",
     "django_better_admin_arrayfield",
     "django_celery_beat",
     "import_export",
@@ -288,13 +289,13 @@ LOGGING = {
 
 # NEW
 
-# ELASTICSEARCH_DSL = {
-#     "default": {"hosts": os.getenv("ELASTIC_HOST", "localhost")},
-# }
-# # Set to False to globally disable auto-syncing.
-# ELASTICSEARCH_DSL_AUTOSYNC = False
-# # Set to False not force an [index refresh] with every save.
-# ELASTICSEARCH_DSL_AUTO_REFRESH = False
+ELASTICSEARCH_DSL = {
+    "default": {"hosts": os.getenv("ELASTIC_HOST", "http://localhost:9200")},
+}
+# Set to False to globally disable auto-syncing.
+ELASTICSEARCH_DSL_AUTOSYNC = True
+# Set to False not force an [index refresh] with every save.
+ELASTICSEARCH_DSL_AUTO_REFRESH = True
 
 
 BATON = {
